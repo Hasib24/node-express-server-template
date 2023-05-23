@@ -5,7 +5,7 @@
 
 ```require('crypto').randomBytes(64).toString('hex')```
 
-<pre>
+
 ```javascript
 function greet(name) {
   console.log(`Hello, ${name}!`);
@@ -13,4 +13,3 @@ function greet(name) {
 
 greet("John");
 ```
-</pre>
