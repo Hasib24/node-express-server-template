@@ -26,6 +26,22 @@ const client = new MongoClient(uri, {
     }
 });
 
+const verifyJWT =(req, res, next)=>{
+    const authorizatnHeader = req.headers.authorizatn;
+    if(!authorizatnHeader){
+       return res.status(401).send({error : true, message: 'UnAothorized access'})
+    }
+    const token = authorizatnHeader.split(" ")[1]
+    // console.log(token);
+    jwt.verify(token, process.env.DB_ACCESS_TOKEN_SECREAT, (error, decoded)=>{
+        if(error){
+            return  res.status(403).send({error : true, message: 'UnAothorized access'})
+        }
+        req.decoded = decoded;
+        next()
+    })
+}
+
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -47,7 +63,9 @@ async function run() {
 
 
         //services api
-        app.get('/services', async (req, res) => {
+        app.get('/services', verifyJWT, async (req, res) => {
+            // const headers = req.headers;
+            // console.log(headers.authorizatn);
             const query = {};
             const option = {
                 sort : { price : 1 }
