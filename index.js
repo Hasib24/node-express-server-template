@@ -64,13 +64,17 @@ async function run() {
 
         //services api
         app.get('/services', verifyJWT, async (req, res) => {
+            
+            // console.log(req.decoded)
+            // const userEmail = req.query.email;
             // const headers = req.headers;
             // console.log(headers.authorizatn);
-            const query = {};
-            const option = {
-                sort : { price : 1 }
+
+            if(req.decoded.email !== req.query.email){
+                res.status(403).send({error: 1, message: "Access Forbidden"})
             }
-            const cursor = serviceCollection.find(query, option);
+            
+            const cursor = serviceCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
